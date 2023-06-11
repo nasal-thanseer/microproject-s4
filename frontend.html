@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Course Recommendation Chat</title>
+  <style>
+    /* CSS styles for the chat interface */
+    .chat-container {
+      border: 1px solid #ccc;
+      padding: 10px;
+      width: 400px;
+      height: 300px;
+      overflow-y: scroll;
+    }
+
+    .message {
+      margin-bottom: 10px;
+    }
+
+    .user-message {
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container" id="chat-container">
+    <div class="message">Welcome to the course recommendation chat!</div>
+  </div>
+
+  <div>
+    <input type="text" id="user-input" placeholder="Type your answer" />
+    <button id="send-button">Send</button>
+  </div>
+
+  <script>
+    // JavaScript code for handling user input and receiving recommendations
+
+    // Function to display a new message in the chat interface
+    function displayMessage(message, isUserMessage) {
+      const chatContainer = document.getElementById('chat-container');
+      const messageElement = document.createElement('div');
+      messageElement.classList.add('message');
+
+      if (isUserMessage) {
+        messageElement.classList.add('user-message');
+      }
+
+      messageElement.textContent = message;
+      chatContainer.appendChild(messageElement);
+
+      // Scroll to the bottom of the chat container
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    // Function to process user input and receive recommendations
+    function processUserInput() {
+      const userInput = document.getElementById('user-input').value;
+
+      // Display the user's input in the chat interface
+      displayMessage(userInput, true);
+
+      // Send the user input to the backend for processing
+      fetch('/recommend', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ answer: userInput })
+      })
+        .then(response => response.json())
+        .then(data => {
+          // Check if recommendations are received
+          if (data.recommendations && data.recommendations.length > 0) {
+            // Display the recommended courses and reasons
+            const recommendations = data.recommendations;
+            const reasons = data.reasons;
+
+            displayMessage('Recommended courses:', false);
+
+            for (let i = 0; i < recommendations.length; i++) {
+              const recommendationMessage = `${i + 1}. ${recommendations[i]}\nReason: ${reasons[i]}`;
+              displayMessage(recommendationMessage, false);
+            }
+          } else if (data.question) {
+            // Display the recommendation question from the backend
+            displayMessage(data.question, false);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+
+      // Clear the input field after sending the user input
+      document.getElementById('user-input').value = '';
+    }
+
+    // Event listener for the send button
+    document.getElementById('send-button').addEventListener('click', processUserInput);
+
+    // Event listener for pressing Enter key in the input field
+    document.getElementById('user-input').addEventListener('keydown', event => {
+      if (event.key === 'Enter') {
+        processUserInput();
+      }
+    });
+  </script>
+</body>
+</html>
