@@ -1,42 +1,26 @@
-from flask import Flask, request, jsonify
 import requests
 from bs4 import BeautifulSoup
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-# Questions and corresponding answers
-questions = [
-    {
-        'question': 'What is your preferred programming language?',
-        'answer': None
-    },
-    {
-        'question': 'What is your preferred field of study?',
-        'answer': None
-    },
-    {
-        'question': 'What is your preferred level of difficulty?',
-        'answer': None
-    }
-]
-
-# Function to scrape course data from a website
-def scrape_courses(url):
+# Function to scrape course data from classcentral.com
+def scrape_courses():
+    url = 'https://www.classcentral.com'
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
 
     courses = {}
     course_descriptions = {}
 
-    # Extract course titles and descriptions
-    course_elements = soup.select('.course-card')
+    course_elements = soup.select('.course-name')
     for element in course_elements:
-        course_id = element['data-id']
-        course_title = element.select_one('.course-title').text.strip()
-        course_description = element.select_one('.course-description').text.strip()
+        course_title = element.text.strip()
+        course_description = element.parent.select_one('.course-name + p').text.strip()
 
+        course_id = len(courses) + 1
         courses[course_id] = course_title
         course_descriptions[course_id] = course_description
 
@@ -65,6 +49,93 @@ def recommend_courses(preferences, courses, course_descriptions):
 
     return recommended_courses, reasons
 
+# Scrape course data from classcentral.com
+courses, course_descriptions = scrape_courses()
+
+# Questions and corresponding answers
+questions = [
+    {
+        'question': 'What is your preferred programming language?',
+        'answer': None
+    },
+    {
+        'question': 'What is your preferred field of study?',
+        'answer': None
+    },
+    {
+        'question': 'What is your preferred level of difficulty?',
+        'answer': None
+    },
+    {
+        'question': 'What are your favorite subjects in school?',
+        'answer': None
+    },
+    {
+        'question': 'Are you interested in practical hands-on learning or theoretical knowledge?',
+        'answer': None
+    },
+    {
+        'question': 'What are your career aspirations?',
+        'answer': None
+    },
+    {
+        'question': 'Do you prefer group projects or individual work?',
+        'answer': None
+    },
+    {
+        'question': 'Are you interested in research-oriented courses?',
+        'answer': None
+    },
+    {
+        'question': 'What is your preferred learning style (visual, auditory, kinesthetic)?',
+        'answer': None
+    },
+    {
+        'question': 'Do you enjoy problem-solving and logical thinking?',
+        'answer': None
+    },
+    {
+        'question': 'What is your preferred mode of learning (online, classroom, hybrid)?',
+        'answer': None
+    },
+    {
+        'question': 'Are you interested in interdisciplinary studies?',
+        'answer': None
+    },
+    {
+        'question': 'What are your hobbies and interests outside of academics?',
+        'answer': None
+    },
+    {
+        'question': 'Do you have any prior programming or technical experience?',
+        'answer': None
+    },
+    {
+        'question': 'Are you interested in courses with a focus on creativity and design?',
+        'answer': None
+    },
+    {
+        'question': 'What is your preferred course duration (short-term, long-term)?',
+        'answer': None
+    },
+    {
+        'question': 'Do you prefer courses with frequent assessments or fewer assessments?',
+        'answer': None
+    },
+    {
+        'question': 'Are you open to taking courses from different educational institutions?',
+        'answer': None
+    },
+    {
+        'question': 'Are you interested in courses that offer certifications or credentials?',
+        'answer': None
+    },
+    {
+        'question': 'What is your preferred course format (self-paced, instructor-led)?',
+        'answer': None
+    }
+]
+
 # API endpoint for course recommendation
 @app.route('/recommend', methods=['POST'])
 def course_recommendation():
@@ -79,18 +150,11 @@ def course_recommendation():
     if all(question['answer'] is not None for question in questions):
         # Generate final recommendations
         answers = [question['answer'] for question in questions]
-
-        # Scrape course data from a website
-        course_url = 'https://www.example.com/courses'  # Replace with the actual URL of the course listing page
-        courses, course_descriptions = scrape_courses(course_url)
-
-        # Get course recommendations and reasons
-        user_preferences = ' '.join(answers)
-        recommendations, reasons = recommend_courses(user_preferences, courses, course_descriptions)
+        recommendations, reasons = recommend_courses(answers, courses, course_descriptions)
 
         # Prepare the response
         response = {
-            'recommendations': recommendations,
+            'recommendations': [courses[course] for course in recommendations],
             'reasons': reasons
         }
 
