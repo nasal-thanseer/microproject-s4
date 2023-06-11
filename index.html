@@ -4,7 +4,8 @@
   <title>Course Recommendation Chat</title>
   <style>
     /* CSS styles for the chat interface */
-body {
+    /* ... (existing CSS styles) ... */
+    body {
   margin: 0;
   padding: 0;
   display: grid;
@@ -77,7 +78,6 @@ input[type="text"] {
   cursor: pointer;
   margin-left: 10px; /* Add left margin for spacing */
 }
-
   </style>
 </head>
 <body>
@@ -113,10 +113,10 @@ input[type="text"] {
     // Function to process user input and receive recommendations
     function processUserInput() {
       const userInput = document.getElementById('user-input').value;
-
-      // Function to handle the send button click event
-      function handleSendButtonClick() {
+      
+    function handleSendButtonClick() {
       const userInput = document.getElementById('user-input').value;
+
       // Display the user's input in the chat interface
       displayMessage(userInput, true);
 
@@ -156,15 +156,72 @@ input[type="text"] {
     }
 
     // Event listener for the send button
-document.getElementById('send-button').addEventListener('click', handleSendButtonClick);
+    document.getElementById('send-button').addEventListener('click', processUserInput);
 
-// Event listener for the Enter key press
-document.getElementById('user-input').addEventListener('keydown', function(event) {
-  if (event.keyCode === 13) {
+    // Event listener for pressing Enter key in the input field
+    document.getElementById('user-input').addEventListener('keydown', event => {
+    if (event.keyCode === 13) {
     event.preventDefault(); // Prevent the default Enter key behavior (e.g., new line in text area)
     handleSendButtonClick();
-  }
+      }
     });
+
+    // Function to display a question to the user
+    function displayQuestion(question) {
+      displayMessage(question, false);
+    }
+
+    // Function to display the course recommendations to the user
+    function displayRecommendations(recommendations) {
+      displayMessage('Recommended courses:', false);
+      recommendations.forEach(function (recommendation, index) {
+        const message = `${index + 1}. ${recommendation}`;
+        displayMessage(message, false);
+      });
+    }
+
+    // Function to get the next question or recommendations from the backend
+    function getNextQuestionOrRecommendations(answer) {
+      if (answer) {
+        // Submit the user's answer to the backend
+        fetch('/answers', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ answer: answer })
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.question) {
+              // Display the next question
+              displayQuestion(data.question);
+            } else if (data.recommendations) {
+              // Display the recommendations
+              displayRecommendations(data.recommendations);
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      } else {
+        // Get the first question from the backend
+        fetch('/questions')
+          .then(response => response.json())
+          .then(data => {
+            if (data.question) {
+              // Display the first question
+              displayQuestion(data.question);
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      }
+    }
+
+    // Call the API to get the first question
+    getNextQuestionOrRecommendations();
   </script>
 </body>
 </html>
