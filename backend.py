@@ -55,15 +55,7 @@ courses, course_descriptions = scrape_courses()
 # Questions and corresponding answers
 questions = [
     {
-        'question': 'What is your preferred programming language?',
-        'answer': None
-    },
-    {
         'question': 'What is your preferred field of study?',
-        'answer': None
-    },
-    {
-        'question': 'What is your preferred level of difficulty?',
         'answer': None
     },
     {
@@ -79,35 +71,11 @@ questions = [
         'answer': None
     },
     {
-        'question': 'Do you prefer group projects or individual work?',
-        'answer': None
-    },
-    {
-        'question': 'Are you interested in research-oriented courses?',
-        'answer': None
-    },
-    {
-        'question': 'What is your preferred learning style (visual, auditory, kinesthetic)?',
-        'answer': None
-    },
-    {
         'question': 'Do you enjoy problem-solving and logical thinking?',
         'answer': None
     },
     {
-        'question': 'What is your preferred mode of learning (online, classroom, hybrid)?',
-        'answer': None
-    },
-    {
-        'question': 'Are you interested in interdisciplinary studies?',
-        'answer': None
-    },
-    {
         'question': 'What are your hobbies and interests outside of academics?',
-        'answer': None
-    },
-    {
-        'question': 'Do you have any prior programming or technical experience?',
         'answer': None
     },
     {
@@ -116,18 +84,6 @@ questions = [
     },
     {
         'question': 'What is your preferred course duration (short-term, long-term)?',
-        'answer': None
-    },
-    {
-        'question': 'Do you prefer courses with frequent assessments or fewer assessments?',
-        'answer': None
-    },
-    {
-        'question': 'Are you open to taking courses from different educational institutions?',
-        'answer': None
-    },
-    {
-        'question': 'Are you interested in courses that offer certifications or credentials?',
         'answer': None
     },
     {
