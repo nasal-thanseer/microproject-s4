@@ -113,6 +113,9 @@ input[type="text"] {
     // Function to process user input and receive recommendations
     function processUserInput() {
       const userInput = document.getElementById('user-input').value;
+      
+    function handleSendButtonClick() {
+      const userInput = document.getElementById('user-input').value;
 
       // Display the user's input in the chat interface
       displayMessage(userInput, true);
@@ -157,8 +160,9 @@ input[type="text"] {
 
     // Event listener for pressing Enter key in the input field
     document.getElementById('user-input').addEventListener('keydown', event => {
-      if (event.key === 'Enter') {
-        processUserInput();
+    if (event.keyCode === 13) {
+    event.preventDefault(); // Prevent the default Enter key behavior (e.g., new line in text area)
+    handleSendButtonClick();
       }
     });
 
