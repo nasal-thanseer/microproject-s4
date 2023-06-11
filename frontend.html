@@ -5,6 +5,79 @@
   <style>
     /* CSS styles for the chat interface */
     /* ... (existing CSS styles) ... */
+    body {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Split the page into two equal columns */
+  height: 100vh;
+  font-family: 'Open Sans', sans-serif;
+  background-color: #f9f9f9; /* Off-white background color */
+  overflow: hidden; /* Hide the scroll bars */
+}
+
+.chat-container {
+  border: 1px solid #ccc;
+  padding: 10px;
+  overflow: auto; /* Enable scrolling within the chat container */
+  border-radius: 10px;
+  background-color: #fff; /* White background color for chat container */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align messages to the left side */
+  max-height: 100%; /* Limit the maximum height of the chat container */
+}
+
+.message {
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  display: inline-block;
+  max-width: 80%; /* Limit the maximum width of the message bubble */
+}
+
+.user-message {
+  align-self: flex-end;
+  text-align: right;
+  background-color: #dcf8c6; /* User message bubble color */
+}
+
+.backend-message {
+  align-self: flex-start;
+  text-align: left;
+  background-color: #eaf2ff; /* Backend message bubble color */
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Align items to the center vertically */
+  padding: 10px;
+  grid-column: 2; /* Set the input container to the second column */
+}
+
+input[type="text"] {
+  padding: 13px; /* Add padding to the input text box */
+  border: 1px solid #ccc;
+  border-radius: 30px;
+  width: 70%;
+  background-color: #b1afaf; /* Off-white grey shade */
+  outline: none;
+  margin-left: 30px;
+  margin-top:40%;
+}
+
+#send-button {
+  padding: 13px 20px; /* Add padding to the send button */
+  border: none;
+  border-radius: 50px;
+  background-color: green;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 10px; /* Add left margin for spacing */
+}
   </style>
 </head>
 <body>
